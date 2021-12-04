@@ -8,6 +8,7 @@ import (
 	"github.com/rsteube/carapace/internal/elvish"
 	"github.com/rsteube/carapace/internal/fish"
 	"github.com/rsteube/carapace/internal/ion"
+	"github.com/rsteube/carapace/internal/json"
 	"github.com/rsteube/carapace/internal/nushell"
 	"github.com/rsteube/carapace/internal/oil"
 	"github.com/rsteube/carapace/internal/powershell"
@@ -118,6 +119,7 @@ func (a InvokedAction) value(shell string, callbackValue string) string { // TOD
 		"fish":       fish.ActionRawValues,
 		"elvish":     elvish.ActionRawValues,
 		"ion":        ion.ActionRawValues,
+		"json":       json.ActionRawValues,
 		"nushell":    nushell.ActionRawValues,
 		"oil":        oil.ActionRawValues,
 		"powershell": powershell.ActionRawValues,
