@@ -47,7 +47,7 @@ jobs:
         shellcheck -e SC2148,SC2154 /tmp/zsh.sh
 
     - name: Test
-      run: go install && go test -coverprofile=coverage.out -v ./...
+      run: PATH=$(pwd):$PATH go test -coverprofile=coverage.out -v ./...
 
     - uses: codecov/codecov-action@v2
 
