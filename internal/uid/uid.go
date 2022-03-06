@@ -4,6 +4,7 @@ package uid
 import (
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -27,6 +28,16 @@ func Command(cmd *cobra.Command) string {
 	}
 
 	return "_" + strings.Join(reverse, "__")
+}
+
+func CommandTree(cmd *cobra.Command) []string {
+	names := make([]string, 0)
+	names = append(names, Command(cmd))
+	for _, c := range cmd.Commands() {
+		names = append(names, CommandTree(c)...)
+	}
+	sort.Sort(sort.StringSlice(names))
+	return names
 }
 
 // Executable returns the name of the executable

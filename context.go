@@ -17,9 +17,9 @@ type Context struct {
 	Args []string
 	// Parts contains the splitted CallbackValue during an ActionMultiParts (exclusive the part currently being completed)
 	Parts []string
-	// Env contains environment variables for current context (implicitly passed to `exec.Cmd` during ActionExecCommand)
+	// Env contains environment variables for current context
 	Env []string
-	// Dir contains the working directory for current context (implicitly passed to `exec.Cmd` during ActionExecCommand)
+	// Dir contains the working directory for current context
 	Dir string
 }
 

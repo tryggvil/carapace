@@ -8,10 +8,6 @@ import (
 
 func TestContextAbs(t *testing.T) {
 	wd := func(s string) string {
-		if true {
-			return "/home/rsteube/Documents/development/github/carapace/" + s
-		}
-
 		if wd, _ := os.Getwd(); s != "" {
 			return wd + "/" + s
 		} else {
@@ -20,10 +16,6 @@ func TestContextAbs(t *testing.T) {
 	}
 
 	home := func(s string) string {
-		if true {
-			return "/home/rsteube/" + s
-		}
-
 		if hd, _ := os.UserHomeDir(); s != "" {
 			return hd + "/" + s
 		} else {
@@ -32,10 +24,6 @@ func TestContextAbs(t *testing.T) {
 	}
 
 	parent := func(s string) string {
-		if true {
-			return "/home/rsteube/Documents/development/github/" + s
-		}
-
 		if s != "" {
 			return filepath.Dir(wd("")) + "/" + s
 		}

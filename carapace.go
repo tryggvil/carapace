@@ -51,6 +51,17 @@ func Gen(cmd *cobra.Command) *Carapace {
 	}
 }
 
+func (c Carapace) PreInvoke(f func(cmd *cobra.Command, flag *pflag.Flag, action Action) Action) {
+	if entry := storage.get(c.cmd); entry.preinvoke != nil {
+		_f := entry.preinvoke
+		entry.preinvoke = func(cmd *cobra.Command, flag *pflag.Flag, action Action) Action {
+			return f(cmd, flag, _f(cmd, flag, action)) // TODO verify if this is correct
+		}
+	} else {
+		entry.preinvoke = f
+	}
+}
+
 // PositionalCompletion defines completion for positional arguments using a list of Actions
 func (c Carapace) PositionalCompletion(action ...Action) {
 	storage.get(c.cmd).positional = action
@@ -220,8 +231,6 @@ func addCompletionCommand(cmd *cobra.Command) {
 }
 
 func complete(cmd *cobra.Command, args []string) (string, error) {
-	logger.Println(os.Args) // TODO replace last with '' if empty
-
 	if len(args) == 0 {
 		if s, err := Gen(cmd).Snippet(ps.DetermineShell()); err != nil {
 			fmt.Fprintln(io.MultiWriter(cmd.OutOrStderr(), logger.Writer()), err.Error())
@@ -245,6 +254,8 @@ func complete(cmd *cobra.Command, args []string) (string, error) {
 			}
 
 			targetCmd, targetArgs, err := findTarget(cmd, args)
+			logger.Printf("findTarget(cmd: '%v', args: '[%v]') -> [targetCmd: '%v', targetArgs: '%v']", uid.Command(cmd), strings.Join(args, ","), uid.Command(targetCmd), strings.Join(targetArgs, ","))
+			logger.Println(strings.Join(uid.CommandTree(cmd.Root()), "\n"))
 
 			wd, err := os.Getwd()
 			if err != nil {
@@ -324,6 +335,7 @@ func findTarget(cmd *cobra.Command, args []string) (*cobra.Command, []string, er
 	if len(args) > 2 {
 		origArg = args[2:]
 	}
+	logger.Printf("origArgs: ['%v']\n", strings.Join(origArg, ","))
 	return common.TraverseLenient(cmd, origArg)
 }
 

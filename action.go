@@ -1,7 +1,6 @@
 package carapace
 
 import (
-	"path/filepath"
 	"regexp"
 	"runtime"
 	"time"
@@ -86,6 +85,18 @@ func (a Action) Style(style string) Action {
 	})
 }
 
+// Style sets the style using a reference
+//   ActionValues("value").StyleR(&style.Carapace.Value)
+//   ActionValues("description").StyleR(&style.Carapace.Value)
+func (a Action) StyleR(style *string) Action {
+	return ActionCallback(func(c Context) Action {
+		if style != nil {
+			return a.Style(*style)
+		}
+		return a
+	})
+}
+
 // Style sets the style using a function
 //   ActionValues("dir/", "test.txt").StyleF(style.ForPathExt)
 //   ActionValues("true", "false").StyleF(style.ForKeyword)
@@ -106,7 +117,7 @@ func (a Action) Chdir(dir string) Action {
 		if err != nil {
 			return ActionMessage(err.Error())
 		}
-		c.Dir = filepath.Dir(abs)
+		c.Dir = abs
 		return a.Invoke(c).ToA()
 	})
 }
