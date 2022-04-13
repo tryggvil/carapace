@@ -10,5 +10,14 @@ import (
 
 // Snippet creates the nushell completion script
 func Snippet(cmd *cobra.Command) string {
-	return fmt.Sprintf("config set completion.%v [%v _carapace nushell]", cmd.Name(), uid.Executable())
+	return fmt.Sprintf(`module completions {
+    def "nu-complete %v" [line: string, pos: int] {
+        $line | str substring ",$pos" | split row " " | %v _carapace nushell $in | from json
+    }
+    
+    export extern "%v" [
+        ...args: string@"nu-complete %v"
+    ]
+}
+`, cmd.Name(), uid.Executable(), cmd.Name(), cmd.Name())
 }
